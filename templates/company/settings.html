@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block code %}
+<div class="container py-5">
+    <div class="card border-0 shadow-sm rounded-4 p-5 mx-auto" style="max-width: 700px;">
+        <h2 class="fw-bold mb-4">Edit Business Settings</h2>
+        
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {{ form.as_p }}
+            
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary rounded-pill px-5">Save Changes</button>
+                <a href="{% url 'dashboard' %}" class="btn btn-light rounded-pill px-4">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

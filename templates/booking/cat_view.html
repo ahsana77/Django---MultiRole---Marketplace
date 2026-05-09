@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block code %}
+<div class="container-fluid px-lg-5 mt-5">
+    <div class="row">
+        
+        <div class="col-md-3 border-end">
+            <div class="sticky-top" style="top: 100px;">
+                <h5 class="fw-bold mb-4">Select a service</h5>
+                <div class="row g-2">
+                    {% for sub in subcategories %}
+                    <div class="col-6 text-center">
+                        <a href="#sub-{{ sub.id }}" class="text-decoration-none">
+                            <div class="p-3 border rounded-4 hover-shadow transition bg-white">
+                                <p class="small text-dark mb-0 fw-bold" style="font-size: 11px;">{{ sub.name }}</p>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9 ps-md-5">
+            <h1 class="fw-bold mb-5">{{ category.name }}</h1>
+
+            {% for sub in subcategories %}
+            <div class="mb-5 pt-3" id = "sub-{{sub.id}}">
+                <h3 class="fw-bold mb-4" style="color: #2b2b2b;">{{ sub.name }}</h3>
+
+                {% for service in sub.subcat_services.all %}
+                <div class="card border-0 border-bottom rounded-0 pb-4 mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h5 class="fw-bold mb-1">{{ service.title }}</h5>
+                            {% if service.img %}
+                            <img src="{{ service.img.url }}" class="rounded-4 shadow-sm" style="width: 150px; height: 150px; object-fit: cover;">
+                            {% endif %}
+                            <p class="text-muted small mb-2">⭐{{service.avg_rating}} ({{service.review_count}} reviews)</p>
+                            <h5 class="fw-bold text-dark">AED {{ service.price }}</h5>
+                            <p class="small text-muted mt-3"> {{service.description}}</p>
+                            <a href="{% url 'serviceview' service.id %}" class="small fw-bold text-primary text-decoration-none mt-2 d-inline-block">View details</a>
+                        </div>
+                        <div class="col-4 text-end position-relative">
+                            
+                            <button class="btn btn-white shadow-sm border fw-bold position-absolute bottom-0 start-50 translate-middle-x mb-n2 bg-white text-primary px-4 py-2 rounded-3">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .transition { transition: transform 0.2s; }
+    .transition:hover { transform: translateY(-5px); }
+</style>
+{% endblock %}

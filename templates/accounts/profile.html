@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block code %}
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+                <div class="position-relative d-inline-block mx-auto mb-3">
+                    <img src="{{user.profile_pic.url}}" class="rounded-circle border border-4 border-white shadow-sm" style="width: 120px; height: 120px; object-fit: cover;">
+                </div>
+                <h4 class="fw-bold mb-1">{{ user.first_name }} {{ user.last_name }}</h4>
+                <p class="text-muted small mb-3">@{{ user.username }}</p>
+                
+                <div class="d-flex justify-content-around bg-light rounded-3 p-3 mb-4">
+                    <div class="text-center">
+                        <h6 class="fw-bold mb-0">{{ pending_count }}</h6>
+                        <small class="text-muted">Pending</small>
+                    </div>
+                    <div class="text-center">
+                        <h6 class="fw-bold mb-0">{{ confirmed_count }}</h6>
+                        <small class="text-muted">Confirmed</small>
+                    </div>
+                </div>
+                
+                <ul class="list-group list-group-flush text-start border-top">
+                    <li class="list-group-item border-0 px-0">
+                        <small class="text-muted d-block">Phone</small>
+                        <span class="fw-semibold">{{ user.phone_no }}</span>
+                    </li>
+                    <li class="list-group-item border-0 px-0">
+                        <small class="text-muted d-block">Email</small>
+                        <span class="fw-semibold">{{ user.email }}</span>
+                    </li>
+                </ul>
+                <a href="{% url 'editpro' %}" class="btn btn-outline-primary btn-sm w-100 mt-4 rounded-pill">Edit Profile</a>
+
+                <a href="{% url 'logout' %}" class="btn btn-outline-primary btn-sm w-100 mt-4 rounded-pill">Logout</a>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <h5 class="fw-bold mb-4">My Service Schedule</h5>
+            
+            {% for booking in bookings %}
+            <div class="card border-0 shadow-sm mb-3 rounded-4 overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="d-flex gap-3">
+                            <div class="bg-primary-subtle text-primary p-3 rounded-3 h-100">
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">{{ booking.service.title }}</h6>
+                                <p class="text-muted small mb-0">{{ booking.booking_date }} at {{ booking.timeslot }}</p>
+                                <p class="small mt-2 mb-0">
+                                    <strong>Provider:</strong> {{ booking.company.name }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            {% if booking.status == 'pending' %}
+                                <span class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill">Waiting for Approval</span>
+                            {% elif booking.status == 'confirmed' %}
+                                <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">Technician Confirmed</span>
+                            {% elif booking.status == 'completed' %}
+                                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Job Finished</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-5 bg-white rounded-4 shadow-sm">
+                <p class="text-muted">You haven't booked any services yet.</p>
+                <a href="{% url 'home' %}" class="btn btn-primary rounded-pill px-4">Explore Services</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

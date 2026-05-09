@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block code %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8">
+          
+          <img src="{{service.img.url}}" class="card" style="height: 300px; object-fit: cover;">
+            <h2 class="fw-bold">{{ service.title }}</h2>
+            <h5 class="fw-bold mt-5 mb-3">Recent Work Gallery</h5>
+            <div class="d-flex overflow-auto gap-3 pb-3" style="scrollbar-width: none;">
+                {% for item in service.gallery.all %}
+                    <img src="{{ item.images.url }}" class="rounded-4 shadow-sm" style="width: 280px; height: 200px; object-fit: cover;">
+                {% empty %}
+                    <p class="text-muted">No work photos uploaded yet.</p>
+                {% endfor %}
+            </div>
+            <p>⭐{{service.avg_rating}} ({{service.review_count}} reviews)</p>
+            <p class="text-muted">{{ service.sub_cat.name }} | {{ service.duration_minutes }} mins</p>
+            <p class="small text-muted mt-3"> {{service.description}}</p>
+
+
+                        
+
+            <h5 class="fw-bold mt-5 mb-3">Service Overview</h5>
+            <p class="text-secondary">{{ service.overview }}</p>
+
+            <h5 class="fw-bold mt-5 mb-4">Customer Reviews</h5>
+            <h6 class="fw-bold mt-4">Post a Review</h6>
+            {% if request.user.is_authenticated %}
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label>Rating(1-5):</label>
+                  {{form.rating}}
+                </div>
+                <div class="mb-3">
+                  <label>Comment:</label>
+                  {{form.comment}}
+                </div>
+                <div class="mb-3">
+                  <label>Optional Photo:</label>
+                  {{form.img}}
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+              </form>
+
+            {% else %}
+            <p>
+              <a href="{% url 'login' %}">Login </a>to post your review
+            </p>
+
+            {% endif %}
+
+            
+            <hr>
+
+            {% for review in reviews.all %}
+                <div class="border-bottom mb-4 pb-3">
+                    <div class="d-flex justify-content-between">
+                        <span class="fw-bold">{{ review.user.username }}</span>
+                        <span class="text-warning">★ {{ review.rating }}</span>
+                    </div>
+                    <p class="text-muted small">{{ review.comment }}</p>
+                    {%if review.img %}
+                      <img src="{{review.img.url}}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    {% endif%}
+                </div>
+                {% empty %}
+                  <p class="text-muted">No reviews yet. Be the first to review!</p>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4 sticky-top" style="top: 100px;">
+                <h3 class="fw-bold">AED {{ service.price }}</h3>
+                <button class="btn btn-primary w-100 py-3 fw-bold mt-3" type="submit" data-bs-toggle = "modal" data-bs-target="#bookingModal">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header">
+        <h5 class="fw-bold" id="bookingModalLabel">Schedule Service</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <form action="{% url 'addcart' service.id %}" method="POST">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold small">Select Date</label>
+            <input type="date" name="booking_date" id="date_picker" class="form-control" required>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label fw-bold small">Preferred Time</label>
+            <select name="timeslot" class="form-select" required>
+              <option value="Morning (8AM-12PM)">Morning (8AM - 12PM)</option>
+              <option value="Afternoon (12PM-4PM)">Afternoon (12PM - 4PM)</option>
+              <option value="Evening (4PM-8PM)">Evening (4PM - 8PM)</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Confirm Booking</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    // Prevent past dates selection
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById("date_picker").setAttribute('min', today);
+</script>
+{% endblock %}

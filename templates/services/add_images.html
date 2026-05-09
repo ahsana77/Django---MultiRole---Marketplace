@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block code %}
+
+<div class="container" py-5>
+    <div class="card border-0 shadow-sm p-4 rounded-4 mx-auto" style="max-width: 500px;" >
+        <h4 class="mb-3">
+            Add service images of {{service.title}}
+        </h4>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="mb-4">
+                    Select one or more photos
+                </label>
+                <input type="file" name="gallery_images" class="form-control" multiple required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">Upload Photos</button>
+            <a href="{%url 'myservice' %}" class="btn btn-link w-100 text-muted mt-2">Cancel</a>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

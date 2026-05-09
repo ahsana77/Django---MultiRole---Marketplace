@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block code %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'myteam' %}">My Team</a></li>
+        <li class="breadcrumb-item active">{{ employee.user.first_name }}'s Tasks</li>
+      </ol>
+    </nav>
+
+    <h2 class="fw-bold mb-4">Assigned Tasks: {{ employee.user.first_name }}</h2>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4">Service</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td class="ps-4 fw-bold">{{ task.service.title }}</td>
+                    <td>{{ task.booking_date }}</td>
+                    <td>
+                        <span class="badge {% if task.status == 'completed' %}bg-success{% else %}bg-primary{% endif %}">
+                            {{ task.status|title }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center py-4 text-muted">No tasks assigned yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

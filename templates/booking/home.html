@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block code %}
+
+{% if offers %}
+<div id="offerCarousel" class="carousel slide mb-5 shadow-sm rounded-4 overflow-hidden" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        {% for offer in offers %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="4000">
+            <a href="{% url 'offer' offer.id %}">
+                <img src="{{ offer.banner_img.url }}" class="d-block w-100" style="height: 350px; object-fit: cover;">
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="container">
+    <section class="mb-5">
+        <h4 class="fw-bold mb-3">Recently Added</h4>
+        <div class="row g-3">
+            {% for service in recent_services %}
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 h-100 service-card-hover">
+                    <a href="{% url 'serviceview' service.id %}"><img src="{{ service.img.url }}" class="card-img-top rounded-top-4" style="height: 150px; object-fit: cover;">
+                    </a>
+                        <div class="card-body p-2">
+                        <small class="text-primary fw-bold text-uppercase" style="font-size: 10px;">{{ service.category.name }}</small>
+                        <h6 class="fw-bold mb-0 text-truncate">{{ service.title }}</h6>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    
+
+    <section class="mb-5 py-4">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <h4 class="fw-bold m-0 text-primary">Recommended for You</h4>
+            <a href="{% url 'allcats' %}" class="text-decoration-none small">View All</a>
+        </div>
+        <div class="row g-4">
+            {% for service in recommended_services %}
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden service-card-hover">
+                    <a href="{% url 'serviceview' service.id %}"><img src="{{ service.img.url }}" class="card-img-top" style="height: 180px; object-fit: cover;">
+                    </a>
+                        <div class="card-body">
+                        <h6 class="fw-bold mb-1">{{ service.title }}</h6>
+                        <p class="small text-success fw-bold mb-0">AED {{ service.price }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<style>
+    .service-card-hover { transition: 0.3s; cursor: pointer; }
+    .service-card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
+    body { background-color: #f8f9fa; }
+</style>
+{% endblock %}

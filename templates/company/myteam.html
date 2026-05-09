@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block code %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">My Team</h2>
+        <button class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
+            + Add New Member
+        </button>
+    </div>
+
+    <div class="row g-4">
+        {% for emp in employees %}
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-3 rounded-4 text-center">
+                <div >
+                    <img src="{{emp.img.url}}" alt=""class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <i class="bi bi-person-fill fs-1 text-secondary"></i>
+                </div>
+                <h5 class="fw-bold mb-0">{{ emp.user.first_name }}</h5>
+                <p class="text-muted small">{{ emp.designation }}</p>
+                <hr>
+                <div class="d-flex justify-content-center gap-2">
+                    <a href="{%url 'emptasks' emp.id %}"><button class="btn btn-sm btn-outline-primary">View Tasks</button></a>
+                    <a href="{% url 'removeemp' emp.id%} " onclick="return confirm('Are you sure you want to remove {{emp.user.first_name}}?')"><button class="btn btn-sm btn-outline-danger">Remove</button></a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">No employees added yet. Start building your team!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="modal fade" id="addEmployeeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <form method="POST" action="{% url 'addemp' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="fw-bold">New Staff Member</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Full Name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Profile pic</label>
+                        <input type="file" name="profile" class="form-control" >
+
+                        
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Email (will be their username)</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Designation (e.g. Barber, Electrician)</label>
+                        <input type="text" name="designation" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Temporary Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

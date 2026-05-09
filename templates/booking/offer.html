@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block code %}
+<div class="py-5 text-center text-white mb-5" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{{ offer.banner_img.url }}'); background-size: cover; background-position: center;">
+    <h1 class="display-4 fw-bold">{{ offer.title }}</h1>
+    <p class="lead">{{ offer.description }}</p>
+    <div class="badge bg-warning text-dark p-3 fs-5 rounded-pill">
+        CODE: {{ offer.code }} | {{ offer.discount_percent }}% OFF
+    </div>
+</div>
+
+<div class="container mb-5">
+    <h3 class="fw-bold mb-4">Available Services in this Deal</h3>
+    <div class="row g-4">
+        {% for service in services %}
+        <div class="col-md-3">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                {% if service.img %}
+                <img src="{{ service.img.url }}" class="card-img-top" style="height: 180px; object-fit: cover;">
+                {%endif%}
+                <div class="card-body">
+                    <h6 class="fw-bold">{{ service.title }}</h6>
+                    <p class="text-success fw-bold mb-0">AED {{ service.price }}</p>
+                    <small class="text-danger">-{{ offer.discount_percent }}% Discount applies at checkout</small>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <a href="{% url 'serviceview' service.id %}" class="btn btn-primary w-100 rounded-pill">Book Now</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
